@@ -1,0 +1,21 @@
+# 크롤링
+selenium
+webdriver-manager
+requests
+
+# 이미지 처리
+opencv-python-headless
+numpy
+Pillow
+
+# 얼굴 인식
+insightface
+onnxruntime
+
+# 백엔드
+fastapi
+uvicorn
+python-multipart
+
+# 유사도
+scikit-learn
