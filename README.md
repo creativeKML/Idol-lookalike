@@ -134,8 +134,8 @@ main                          # 최종 배포
 | Issue | 브랜치 | 상태 |
 |-------|--------|------|
 | #1 프로젝트 초기 세팅 | `main` | ✅ 완료 |
-| #2 연예인 이미지 크롤링 | `feature/crawling` | 🔲 예정 |
-| #3 얼굴 Crop | `feature/crop` | 🔲 예정 |
+| #2 연예인 이미지 크롤링 | `feature/crawling` | ✅ 완료 |
+| #3 얼굴 Crop | `feature/crop` | ✅ 완료 |
 | #4 임베딩 DB 생성 | `feature/build-db` | 🔲 예정 |
 | #5 FastAPI 백엔드 | `feature/backend` | 🔲 예정 |
 | #6 React 프론트엔드 | `feature/frontend` | 🔲 예정 |
