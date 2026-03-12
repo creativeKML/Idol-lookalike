@@ -6,6 +6,7 @@ FastAPI 서버
 """
 
 import os
+from pathlib import Path
 import pickle
 from typing import Optional
 import numpy as np
@@ -25,15 +26,16 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-CROPPED_DIR = r"C:\workspace\idol_project\data\idol_faces_cropped"
-app.mount("/images", StaticFiles(directory=CROPPED_DIR), name="images")
+BASE_DIR = Path(__file__).resolve().parent
+CROPPED_DIR = BASE_DIR.parent / "data" / "idol_faces_cropped"
+app.mount("/images", StaticFiles(directory=str(CROPPED_DIR)), name="images")
 
 print("🔄 InsightFace 모델 로딩 중...")
 face_app = FaceAnalysis(name="buffalo_sc", providers=["CPUExecutionProvider"])
 face_app.prepare(ctx_id=0, det_size=(640, 640))
 print("✅ 모델 로딩 완료")
 
-DB_PATH = os.path.join(os.path.dirname(__file__), "embeddings.pkl")
+DB_PATH = BASE_DIR / "embeddings.pkl"
 with open(DB_PATH, "rb") as f:
     db = pickle.load(f)
 
