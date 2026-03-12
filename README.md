@@ -142,7 +142,7 @@ main                          # 최종 배포
 | #5 FastAPI 백엔드 | `feature/server` | ✅ 완료 |
 | #6 React 프론트엔드 | `feature/frontend` | ✅ 완료 |
 | #7 프론트-백 연동 | `feature/integration` | ✅ 완료 |
-| #8 최종 테스트 & 배포 | `dev → main` | 🔲 예정 |
+| #8 최종 테스트 & 배포 | `dev → main` | ✅ 완료 |
 
 ---
 
