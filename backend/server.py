@@ -72,7 +72,7 @@ IDOL_DB = build_idol_db(db)
 @app.post("/api/match")
 async def match_face(
     file: UploadFile = File(...),
-    gender: Optional[str] = Form(None),
+    gender: Optional[str] = Form(None),  # "female" | "male" | None(전체)
 ):
     contents = await file.read()
     np_arr = np.frombuffer(contents, np.uint8)
@@ -88,6 +88,7 @@ async def match_face(
     face = max(faces, key=lambda f: (f.bbox[2] - f.bbox[0]) * (f.bbox[3] - f.bbox[1]))
     user_emb = face.embedding / np.linalg.norm(face.embedding)
 
+    # 성별 필터링
     filtered_db = IDOL_DB
     if gender in ("female", "male"):
         filtered_db = [idol for idol in IDOL_DB if idol["gender"] == gender]
