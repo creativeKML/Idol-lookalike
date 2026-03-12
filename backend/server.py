@@ -1,6 +1,6 @@
 """
 FastAPI 서버
-- POST /api/match: 얼굴 이미지 업로드 → 닮은 연예인 Top 5 반환
+- POST /api/match: 얼굴 이미지 업로드 → 닮은 연예인 Top 3 반환
 - GET  /images/...: 연예인 사진 서빙
 - 실행 : python -m uvicorn server:app --reload
 """
@@ -99,9 +99,9 @@ async def match_face(
     idol_embs = np.array([idol["embedding"] for idol in filtered_db])
     sims = cosine_similarity([user_emb], idol_embs)[0]
 
-    top5_idx = sims.argsort()[::-1][:5]
+    top3_idx = sims.argsort()[::-1][:3]
     results = []
-    for idx in top5_idx:
+    for idx in top3_idx:
         idol = filtered_db[idx]
         results.append({
             "key": idol["key"],
