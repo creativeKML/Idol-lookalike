@@ -190,6 +190,11 @@ function App() {
       )}
 
       <div className="footer-text">✦ INSERT COIN TO CONTINUE ✦</div>
+      <div className="copyright">
+        © <a href="https://github.com/creativeKML/Idol-lookalike" target="_blank">
+          github.com/creativeKML/Idol-lookalike
+        </a>
+      </div>
     </div>
   )
 }
