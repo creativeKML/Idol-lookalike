@@ -2,6 +2,8 @@
 
 내 사진을 업로드하면 ArcFace 기반으로 가장 닮은 연예인 Top-3를 찾아주는 웹 서비스입니다.
 
+<img width="665" height="861" alt="Image" src="https://github.com/user-attachments/assets/d9819db4-0dd8-444e-b4b8-67efae452039" />
+
 ## 🛠 기술 스택
 
 | 구분 | 기술 |
@@ -122,7 +124,7 @@ main                          # 최종 배포
     ├── feature/crawling      # 연예인 이미지 크롤링
     ├── feature/crop          # 얼굴 Crop
     ├── feature/build-db      # 임베딩 DB 생성
-    ├── feature/backend       # FastAPI 서버
+    ├── feature/server        # FastAPI 서버
     ├── feature/frontend      # React UI
     └── feature/integration   # 프론트-백 연동
 ```
@@ -134,13 +136,13 @@ main                          # 최종 배포
 | Issue | 브랜치 | 상태 |
 |-------|--------|------|
 | #1 프로젝트 초기 세팅 | `main` | ✅ 완료 |
-| #2 연예인 이미지 크롤링 | `feature/crawling` | 🔲 예정 |
-| #3 얼굴 Crop | `feature/crop` | 🔲 예정 |
-| #4 임베딩 DB 생성 | `feature/build-db` | 🔲 예정 |
-| #5 FastAPI 백엔드 | `feature/backend` | 🔲 예정 |
-| #6 React 프론트엔드 | `feature/frontend` | 🔲 예정 |
-| #7 프론트-백 연동 | `feature/integration` | 🔲 예정 |
-| #8 최종 테스트 & 배포 | `dev → main` | 🔲 예정 |
+| #2 연예인 이미지 크롤링 | `feature/crawling` | ✅ 완료 |
+| #3 얼굴 Crop | `feature/crop` | ✅ 완료 |
+| #4 임베딩 DB 생성 | `feature/build-db` | ✅ 완료 |
+| #5 FastAPI 백엔드 | `feature/server` | ✅ 완료 |
+| #6 React 프론트엔드 | `feature/frontend` | ✅ 완료 |
+| #7 프론트-백 연동 | `feature/integration` | ✅ 완료 |
+| #8 최종 테스트 & 배포 | `dev → main` | ✅ 완료 |
 
 ---
 
