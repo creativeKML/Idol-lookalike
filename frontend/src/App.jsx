@@ -1,9 +1,33 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import './App.css'
 
-const API = 'http://127.0.0.1:8000'
+const API = 'http://localhost:8000'
 
 function App() {
+
+  // 🔊 사운드
+  const selectSoundRef = useRef(null)
+  const fightSoundRef = useRef(null)
+  const errorSoundRef = useRef(null)
+  
+  useEffect(() => {
+    selectSoundRef.current = new Audio('/sounds/select.mp3')
+    fightSoundRef.current  = new Audio('/sounds/fight.mp3')
+    errorSoundRef.current  = new Audio('/sounds/error.mp3')
+  }, [])
+  
+  // 겹침 방지 함수
+  const playSound = (soundRef) => {
+    if (!soundRef.current) return
+
+    soundRef.current.currentTime = 0
+
+    soundRef.current.play().catch(err => {
+      console.log('🔇 sound error:', err)
+    })
+    soundRef.current.play()
+  }  
+
   const [image, setImage] = useState(null)
   const [imageUrl, setImageUrl] = useState(null)
   const [gender, setGender] = useState('전체')
@@ -12,7 +36,14 @@ function App() {
   const [error, setError] = useState(null)
   const [dragging, setDragging] = useState(false)
   const [selectedIdx, setSelectedIdx] = useState(0)
+
   const fileInputRef = useRef(null)
+
+  useEffect(() => {
+    return () => {
+      if (imageUrl) URL.revokeObjectURL(imageUrl)
+    }
+  }, [imageUrl])
 
   const handleFile = (file) => {
     if (!file || !file.type.startsWith('image/')) return
@@ -30,24 +61,38 @@ function App() {
 
   const handleSubmit = async () => {
     if (!image) return
+
     setLoading(true)
     setError(null)
     setResults(null)
 
     const formData = new FormData()
     formData.append('file', image)
-    if (gender !== '전체') formData.append('gender', gender === '여자' ? 'female' : 'male')
+
+    if (gender !== '전체') {
+      formData.append('gender', gender === '여자' ? 'female' : 'male')
+    }
 
     try {
       const res = await fetch(`${API}/api/match`, {
         method: 'POST',
         body: formData,
       })
+
       const data = await res.json()
-      if (!res.ok) throw new Error(data.detail || '오류가 발생했습니다.')
+
+      if (!res.ok) throw new Error(data.detail || data.message)
+
+      if (!data.results || data.results.length === 0) {
+        setError('닮은 연예인을 찾지 못했습니다.')
+        return
+      }
+
       setResults(data.results.slice(0, 3))
       setSelectedIdx(0)
+
     } catch (err) {
+      playSound(errorSoundRef)
       setError(err.message)
     } finally {
       setLoading(false)
@@ -61,7 +106,6 @@ function App() {
 
   return (
     <div className="game-root">
-      <div className="scanlines" />
 
       {/* 타이틀 */}
       <div className="title-bar">
@@ -69,14 +113,17 @@ function App() {
         <h1 className="game-title">IDOL FIGHTER</h1>
         <div className="title-deco">★</div>
       </div>
-      <p className="game-subtitle">— SELECT YOUR OPPONENT —</p>
 
-      {/* VS 영역 */}
+      <div className="game-subtitle">— SELECT YOUR OPPONENT —</div>
+
+      {/* VS */}
       <div className="vs-area">
 
         {/* 1P */}
         <div className="player-panel p1">
+
           <div className="player-label p1-label">1P</div>
+
           <div
             className={`portrait-frame ${dragging ? 'dragging' : ''}`}
             onClick={() => fileInputRef.current.click()}
@@ -84,24 +131,28 @@ function App() {
             onDragLeave={() => setDragging(false)}
             onDrop={handleDrop}
           >
-            {imageUrl
-              ? <img src={imageUrl} alt="나" className="portrait-img" />
-              : <div className="portrait-empty">
-                  <span className="portrait-icon">👤</span>
-                  <span className="portrait-hint">PRESS START</span>
-                </div>
-            }
+            {imageUrl ? (
+              <img src={imageUrl} className="portrait-img" />
+            ) : (
+              <div className="portrait-empty">
+                <div className="portrait-icon">📷</div>
+                <div className="portrait-hint">DROP IMAGE</div>
+              </div>
+            )}
+
             <input
               ref={fileInputRef}
               type="file"
-              accept="image/*"
-              style={{ display: 'none' }}
-              onChange={(e) => handleFile(e.target.files[0])}
+              hidden
+              onChange={(e) => {
+                playSound(selectSoundRef)
+                handleFile(e.target.files[0])
+              }}
             />
           </div>
+
           <div className="player-name p1-name">YOU</div>
 
-          {/* 성별 선택 - 1P 아래 */}
           <div className="gender-row">
             {['전체', '여자', '남자'].map((g) => (
               <button
@@ -118,6 +169,7 @@ function App() {
         {/* VS 중앙 */}
         <div className="vs-center">
           <div className="vs-text">VS</div>
+
           {selected && (
             <div className="similarity-display">
               <div className="sim-value">{selected.similarity}%</div>
@@ -128,73 +180,96 @@ function App() {
 
         {/* 2P */}
         <div className="player-panel p2">
+
           <div className="player-label p2-label">2P</div>
+
           <div className="portrait-frame p2-frame">
-            {selected
-              ? selected.photo
-                ? <img src={`${API}${selected.photo}`} alt={formatName(selected.folder)} className="portrait-img" />
-                : <div className="portrait-rival">
-                    <span className="rival-initial">{formatName(selected.folder)[0]}</span>
-                  </div>
-              : <div className="portrait-empty">
-                  <span className="portrait-icon">❓</span>
-                  <span className="portrait-hint">???</span>
-                </div>
-            }
+            {selected ? (
+              <img src={`${API}${selected.photo}`} className="portrait-img" />
+            ) : (
+              <div className="portrait-rival">
+                <div className="rival-initial">?</div>
+              </div>
+            )}
           </div>
+
           <div className="player-name p2-name">
             {selected ? formatName(selected.folder) : '???'}
           </div>
+
           {selected && (
-            <div className="player-group">{groupName(selected.folder)}</div>
+            <div className="player-group">
+              {groupName(selected.folder)}
+            </div>
           )}
         </div>
+
       </div>
 
-      {/* FIGHT 버튼 */}
+      {/* 버튼 */}
       <div className="controls">
         <button
           className={`fight-btn ${loading ? 'loading' : ''}`}
-          onClick={handleSubmit}
+          onClick={() => {
+            playSound(fightSoundRef)
+            handleSubmit()
+          }}
           disabled={!image || loading}
         >
-          {loading ? 'ANALYZING...' : '▶  FIGHT !'}
+          {loading ? 'ANALYZING...' : 'FIGHT !'}
         </button>
-        {error && <p className="error-msg">⚠ {error}</p>}
+
+        {error && <div className="error-msg">{error}</div>}
       </div>
 
-      {/* 캐릭터 선택창 */}
+      {/* TOP3 */}
       {results && (
         <div className="select-screen">
+
           <div className="select-title">▼ TOP MATCHES ▼</div>
+
           <div className="select-grid">
             {results.map((idol, i) => (
               <div
                 key={idol.key}
-                className={`select-card ${selectedIdx === i ? 'selected' : ''}`}
-                onClick={() => setSelectedIdx(i)}
+                className={`
+                select-card
+                ${i === selectedIdx ? 'selected' : ''} 
+                ${i === 0 ? 'winner' : ''}
+                `}
+                onClick={() => {
+                  playSound(selectSoundRef)
+                  setSelectedIdx(i)
+                }}
               >
-                <div className="select-rank">#{i + 1}</div>
+                {i === 0 && <div className="crown">👑</div>}
+
                 <div className="select-avatar">
-                  {idol.photo
-                    ? <img src={`${API}${idol.photo}`} alt={formatName(idol.folder)} className="select-avatar-img" />
-                    : formatName(idol.folder)[0]
-                  }
+                  <img src={`${API}${idol.photo}`} className="select-avatar-img" />
                 </div>
-                <div className="select-name">{formatName(idol.folder)}</div>
-                <div className="select-sim">{idol.similarity}%</div>
+
+                <div className="select-name">
+                  {formatName(idol.folder)}
+                </div>
+
+                <div className="select-sim">
+                  {idol.similarity}%
+                </div>
               </div>
             ))}
           </div>
         </div>
       )}
 
+      {/* 푸터 */}
       <div className="footer-text">✦ INSERT COIN TO CONTINUE ✦</div>
+
       <div className="copyright">
         © <a href="https://github.com/creativeKML/Idol-lookalike" target="_blank">
           github.com/creativeKML/Idol-lookalike
         </a>
       </div>
+
     </div>
   )
 }
