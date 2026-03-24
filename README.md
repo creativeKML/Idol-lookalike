@@ -82,7 +82,6 @@ python crawler.py
 > `data/idol_faces/` 폴더에 연예인 사진 50장씩 수집
 
 ### 3. 얼굴 Crop
-### 3. 얼굴 Crop
 
 ```bash
 cd backend
