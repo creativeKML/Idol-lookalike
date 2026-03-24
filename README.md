@@ -34,6 +34,7 @@
 ---
 
 ## 📁 폴더 구조
+```
 idol-lookalike/
 ├── backend/
 │ ├── crawler.py # 연예인 이미지 크롤러
@@ -56,7 +57,7 @@ idol-lookalike/
 │ ├── idol_faces_cropped/ # crop된 얼굴 사진 (git 제외)
 │ └── idol_faces_cropped_v2/ # v2 개선 데이터
 └── README.md
-
+```
 
 ---
 
@@ -138,6 +139,7 @@ Top-3 닮은꼴 + 유사도 % 반환
 ---
 
 ## 🌿 브랜치 전략
+```
 main                          # 최종 배포
 └── dev                       # 통합 테스트
     ├── feature/crawling      # 연예인 이미지 크롤링
@@ -147,7 +149,7 @@ main                          # 최종 배포
     ├── feature/frontend      # React UI
     ├── feature/integration   # 프론트-백 연동
     └── feature/ui-v2         # UI/UX 개선 (v2)
-
+```
 
 ## 📋 Issues & 진행 현황
 
