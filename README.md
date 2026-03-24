@@ -34,42 +34,6 @@
 ---
 
 ## 📁 폴더 구조
-# 🎤 연예인 닮은꼴 찾기 (Idol Face Lookalike) - v2
-
-내 사진을 업로드하면 ArcFace 기반으로 가장 닮은 연예인 Top-3를 찾아주는 웹 서비스입니다.  
-👉 v2에서는 UI/UX 및 인터랙션이 대폭 개선되었습니다.
-
-<img width="665" height="861" alt="Image" src="https://github.com/user-attachments/assets/d9819db4-0dd8-444e-b4b8-67efae452039" />
-
----
-
-## 🛠 기술 스택
-
-| 구분 | 기술 |
-|------|------|
-| 얼굴 인식 | InsightFace (ArcFace) |
-| 백엔드 | FastAPI + Uvicorn |
-| 프론트엔드 | React + Vite |
-| 임베딩 DB | pickle (코사인 유사도) |
-| UI/UX | CSS Animation + Game UI |
-| 사운드 | Web Audio API |
-
----
-
-## ✨ v2 주요 개선 사항
-
-- 🎮 레트로 게임 스타일 UI (IDOL FIGHTER 컨셉)
-- 🆚 1P vs 2P 대결 구조 UI
-- 🎧 효과음 추가 (선택 / 분석 / 에러)
-- 🖱 드래그 앤 드롭 이미지 업로드
-- 🏆 Top-3 결과 카드 UI 개선
-- 👑 1등 결과 강조 (글로우 + 왕관)
-- 🎯 성별 필터 기능 (전체 / 여자 / 남자)
-- ⚡ 매칭 정확도 개선 (threshold 튜닝)
-
----
-
-## 📁 폴더 구조
 idol-lookalike/
 ├── backend/
 │ ├── crawler.py # 연예인 이미지 크롤러
